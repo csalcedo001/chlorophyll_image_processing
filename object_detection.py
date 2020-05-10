@@ -20,10 +20,10 @@ cnts = cnts[0] if len(cnts) == 2 else cnts[1]
 image_number = 0
 for c in cnts:
 	x,y,w,h = cv2.boundingRect(c)
-
-	print(x, y, w, h)
 	
 	valid_points = []
+
+	# Evaluate only points inside ellipse
 	for row in range(y, y + h + 1):
 		for col in range(x, x + w + 1):
 			# Points to be transformed in the plane
@@ -40,11 +40,15 @@ for c in cnts:
 			if np.sqrt(y_tran ** 2 + x_tran ** 2) <= w:
 				valid_points.append([row, col])
 
+	# Group selected points into clusters
 	number_of_clusters = 3
 	
 	kmeans = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))
 
-	# First approach: find darkest clusters
+
+	# Find color from clustered points
+
+	# First approach: find darkest cluster
 	#index = kmeans_dists.index(min([np.linalg.norm(mean) for mean in kmeans.cluster_centers_]))
 
 	# Second approach: find biggest cluster
@@ -55,7 +59,7 @@ for c in cnts:
 	
 	index = mean_count.index(max(mean_count))
 
-	# Third approach: find cluster with biggest standard deviation
+	# Third approach: find cluster with smallest standard deviation
 	# ...
 
 	object_color = kmeans.cluster_centers_[index]

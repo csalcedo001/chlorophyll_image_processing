@@ -18,7 +18,8 @@ for directory in os.listdir("data/input"):
 		original = image.copy()
 
 		lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-		lab_image_radius = np.sum(np.abs(lab_image.astype("float64"))**2,axis=-1)**(1./2)
+		lab_image[:,:,0] = 128
+		lab_image_radius = np.sum(np.abs(lab_image.astype('float64'))**2,axis=-1)**(1./2)
 		lab_image = lab_image - 128
 		lab_image = np.round(lab_image * np.expand_dims(128 / lab_image_radius, axis=-1)).astype('uint8')
 		lab_image = lab_image + 128
@@ -26,7 +27,7 @@ for directory in os.listdir("data/input"):
 		lab_image[:,:,0] = 128
 		for row in range(lab_image.shape[0]):
 			for col in range(lab_image.shape[1]):
-				if lab_image_radius[row, col] < 255:
+				if lab_image_radius[row, col] < 200:
 					lab_image[row, col] = [0, 128, 128]
 		hue_image = cv2.cvtColor(lab_image, cv2.COLOR_LAB2BGR)
 		#hue_image = hue_image * 8

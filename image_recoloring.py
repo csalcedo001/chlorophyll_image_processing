@@ -1,3 +1,4 @@
+import numpy as np
 def image_recoloring(target_image, target_colors, reference_colors):
 	"""
 	Recolors TARGET_IMAGE to approximate TARGET_COLORS as much as
@@ -12,8 +13,11 @@ def image_recoloring(target_image, target_colors, reference_colors):
 	recolored_image -- image whose colors are as close as possible to those of reference_colors
 	"""
 
-	# TODO: Implement function
+	target_colors = np.array(target_colors)
+	reference_colors = np.array(reference_colors)
+
+	rate = np.sum(reference_colors / target_colors, axis=0) / len(target_colors)
 	
-	recolored_image = target_image
+	recolored_image = target_image * rate
 
 	return recolored_image

@@ -3,9 +3,9 @@
 
 # Avoid pushing results
 results**
-data**
+data/*
 
-!data/input**
+!data/input
 
 ### Python files .gitignore from github
 # Byte-compiled / optimized / DLL files

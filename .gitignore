@@ -5,6 +5,8 @@
 results**
 data**
 
+!data/input**
+
 ### Python files .gitignore from github
 # Byte-compiled / optimized / DLL files
 __pycache__/

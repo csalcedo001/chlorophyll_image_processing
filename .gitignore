@@ -2,7 +2,7 @@
 **.DS_Store
 
 # Avoid pushing results
-results**
+result**
 data/*
 
 !data/input

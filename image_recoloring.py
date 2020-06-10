@@ -1,23 +1,34 @@
-import numpy as np
-def image_recoloring(target_image, target_colors, reference_colors):
-	"""
-	Recolors TARGET_IMAGE to approximate TARGET_COLORS as much as
-	possible to REFERENCE_COLORS.
+"""
+Use image from REFERENCE_IMAGE_PATH to adjust color of image
+from TARGET_IMAGE_PATH saving the result image in RESULT_PATH
+"""
 
-	Attributes:
-	target_image -- image whose colors will be updated
-	target_colors -- colors that represent the palette of target_image.
-	reference_colors -- colors to which target_colors must approximate.
+import sys
 
-	Returns:
-	recolored_image -- image whose colors are as close as possible to those of reference_colors
-	"""
+if len(sys.argv) not in [3, 4]:
+	print("Usage: python3 image_recoloring.py <reference_image_path> <target_image_path> [<result_path>]")
+	exit()
 
-	target_colors = np.array(target_colors)
-	reference_colors = np.array(reference_colors)
+import cv2
+from functions import *
 
-	rate = np.sum(reference_colors / target_colors, axis=0) / len(target_colors)
-	
-	recolored_image = target_image * rate
+reference_image_path = sys.argv[1]
+target_image_path = sys.argv[2]
 
-	return recolored_image
+if len(sys.argv) == 4:
+	result_path = sys.argv[3]
+else:
+	result_path = "result.png"
+
+reference_image = cv2.imread(reference_image_path)
+target_image = cv2.imread(target_image_path)
+
+reference_contours = detect_objects(reference_image)
+reference_colors = get_colors(reference_image, reference_contours)
+
+target_contours = detect_objects(target_image)
+target_colors = get_colors(target_image, target_contours)
+
+recolored_image = image_recoloring(target_image, target_colors, reference_colors)
+
+cv2.imwrite(result_path, recolored_image)

@@ -3,6 +3,7 @@
 
 # Avoid pushing results
 results**
+data**
 
 ### Python files .gitignore from github
 # Byte-compiled / optimized / DLL files

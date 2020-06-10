@@ -8,7 +8,7 @@ import scipy.stats as st
 
 # TODO: Detection mechanism: Invalid sample
 
-constant_box_color = True
+real_box_color = False
 
 def gkern(kernlen, nsig):
 	"""Returns a 2D Gaussian kernel."""
@@ -18,7 +18,7 @@ def gkern(kernlen, nsig):
 	kern2d = np.outer(kern1d, kern1d)
 	return kern2d/kern2d.sum()
 
-kernel_index = 3
+kernel_index = 1
 kernel_size = 2 * kernel_index + 1
 kernel_reshape_factor = 2
 
@@ -32,50 +32,52 @@ for directory in os.listdir("data/input"):
 		image = cv2.imread(input_path)
 		original = image.copy()
 
-		kernel_sharp = kernel_reshape_factor * gkern(kernel_size, 10)
-		#kernel_sharp -= (kernel_reshape_factor - 1) / kernel_size ** 2
-		#kernel_sharp = gkern(kernel_size, 0.1) - gkern(kernel_size, 10)
-		kernel_condense = -gkern(kernel_size, kernel_index / 2) + 2 / kernel_size ** 2
+		#kernel_sharp = kernel_reshape_factor * gkern(kernel_size, 10)
+		##kernel_sharp -= (kernel_reshape_factor - 1) / kernel_size ** 2
+		##kernel_sharp = gkern(kernel_size, 0.1) - gkern(kernel_size, 10)
+		#kernel_condense = -gkern(kernel_size, kernel_index / 2) + 2 / kernel_size ** 2
 
-		lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
-		lab_image[:,:,0] = 128
-		lab_image_radius = np.sum(np.abs(lab_image.astype('float64'))**2,axis=-1)**(1./2)
-		lab_image = lab_image - 128
-		lab_image = np.round(lab_image * np.expand_dims(128 / lab_image_radius, axis=-1)).astype('uint8')
-		lab_image = lab_image + 128
-		#lab_image_radius = np.sum(np.abs(lab_image.astype("float64"))**2,axis=-1)**(1./2)
-		#lab_image_radius = cv2.GaussianBlur(lab_image_radius,(kernel_size, kernel_size), 0)
-		lab_image[:,:,0] = lab_image_radius ** 2
-		#lab_image[:,:,0] = cv2.GaussianBlur(lab_image_radius ** 2,(kernel_size, kernel_size), 0)
-		#for row in range(lab_image.shape[0]):
-		#	for col in range(lab_image.shape[1]):
-		#		if lab_image_radius[row, col] < 200:
-		#			lab_image[row, col] = [0, 128, 128]
-		hue_image = cv2.cvtColor(lab_image, cv2.COLOR_LAB2BGR)
+		#lab_image = cv2.cvtColor(image, cv2.COLOR_BGR2LAB)
+		#lab_image[:,:,0] = 128
+		#lab_image_radius = np.sum(np.abs(lab_image.astype('float64'))**2,axis=-1)**(1./2)
+		#lab_image = lab_image - 128
+		#lab_image = np.round(lab_image * np.expand_dims(128 / lab_image_radius, axis=-1)).astype('uint8')
+		#lab_image = lab_image + 128
+		##lab_image_radius = np.sum(np.abs(lab_image.astype("float64"))**2,axis=-1)**(1./2)
+		##lab_image_radius = cv2.GaussianBlur(lab_image_radius,(kernel_size, kernel_size), 0)
+		#lab_image[:,:,0] = lab_image_radius ** 2
+		##lab_image[:,:,0] = cv2.GaussianBlur(lab_image_radius ** 2,(kernel_size, kernel_size), 0)
+		##for row in range(lab_image.shape[0]):
+		##	for col in range(lab_image.shape[1]):
+		##		if lab_image_radius[row, col] < 200:
+		##			lab_image[row, col] = [0, 128, 128]
+		#hue_image = cv2.cvtColor(lab_image, cv2.COLOR_LAB2BGR)
 		#hue_image = hue_image * 8
 		#hue_image = np.abs(hue_image - 128)
-		#hue_image = image
+
+		# Default
+		hue_image = image
 		
 		gray = cv2.cvtColor(hue_image, cv2.COLOR_BGR2GRAY)
 
 		# First approach: just blur image
-		#blurred = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
-		#canny = cv2.Canny(blurred, 120, 255, 1)
+		blurred = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
+		canny = cv2.Canny(blurred, 120, 255, 1)
 		
 		# Second approach: condense image and sharpen
-		# condensed = (4 * cv2.filter2D(gray, -1, kernel_condense) ** 2 / 255).astype('uint8')
-		condensed = (128 / (1 + np.exp(-1 / 4 * (cv2.filter2D(gray, -1, kernel_condense) - 128)))).astype('uint8')
-		blurred = condensed
-		sharpened = cv2.filter2D(blurred, -1, kernel_sharp)
+		## condensed = (4 * cv2.filter2D(gray, -1, kernel_condense) ** 2 / 255).astype('uint8')
+		#condensed = (128 / (1 + np.exp(-1 / 4 * (cv2.filter2D(gray, -1, kernel_condense) - 128)))).astype('uint8')
+		#blurred = condensed
+		#sharpened = cv2.filter2D(blurred, -1, kernel_sharp)
 
-		canny = cv2.Canny(sharpened, 120, 255, 1)
+		#canny = cv2.Canny(sharpened, 120, 255, 1)
 		kernel = np.ones((5,5),np.uint8)
 		dilate = cv2.dilate(canny, kernel, iterations=1)
 
 		cv2.imwrite("data/lab/" + directory + "/" + filename, hue_image)
 		cv2.imwrite("data/gray/" + directory + "/" + filename, gray)
 		cv2.imwrite("data/blurred/" + directory + "/" + filename, blurred)
-		cv2.imwrite("data/sharpened/" + directory + "/" + filename, sharpened)
+		#cv2.imwrite("data/sharpened/" + directory + "/" + filename, sharpened)
 		cv2.imwrite("data/canny/" + directory + "/" + filename, canny)
 
 		# Find contours
@@ -107,7 +109,7 @@ for directory in os.listdir("data/input"):
 					y_tran = y_tran * w / h
 					
 					# TODO: Condition does not filter pixels
-					if np.sqrt(y_tran ** 2 + x_tran ** 2) <= w:
+					if 2 * np.sqrt(y_tran ** 2 + x_tran ** 2) <= w:
 						valid_points.append([row, col])
 		
 			# Group selected points into clusters
@@ -137,14 +139,14 @@ for directory in os.listdir("data/input"):
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
 			print("Object", image_number, "color: ", object_color)
 		
-			if constant_box_color:
-				box_color = (36,255,12)
-			else:
+			if real_box_color:
 				box_color = object_color
+			else:
+				box_color = (36,255,12)
 
-			# for i in range(len(valid_points)):
-			# 	if kmeans.labels_[i] == index:
-			# 		image[valid_points[i, 0], valid_points[i, 1]] = [36, 255, 12]
+			for i in range(len(valid_points)):
+				if kmeans.labels_[i] == index:
+					image[valid_points[i][0], valid_points[i][1]] = [36, 255, 12]
 
 			cv2.rectangle(image, (x, y), (x + w, y + h), box_color, 2)
 			ROI = original[y:y+h, x:x+w]

@@ -1,8 +1,9 @@
 import cv2
 import numpy as np
-import real_color
-import lab_processing
 from sklearn.cluster import KMeans
+
+from functions import real_color
+from functions import lab_processing
 
 def detect_objects(
 	original_image,

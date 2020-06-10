@@ -10,7 +10,7 @@ if len(sys.argv) not in [3, 4]:
 	exit()
 
 import cv2
-from functions import *
+from functions.main import *
 
 reference_image_path = sys.argv[1]
 target_image_path = sys.argv[2]

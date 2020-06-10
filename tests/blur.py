@@ -14,7 +14,7 @@ image = cv2.imread("data/input/test_images/test_image.png")
 
 kernel_index = 10
 kernel_size = 2 * kernel_index + 1
-kernel_reshape_factor = 3
+kernel_reshape_factor = 5
 
 gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 blurred = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
@@ -24,9 +24,10 @@ kernel_sharp = -np.ones((kernel_size, kernel_size))
 kernel_sharp[kernel_index, kernel_index] = kernel_size ** 2
 
 # Second method
-kernel_sharp = kernel_reshape_factor * gkern(kernel_size, 20)
+kernel_sharp = kernel_reshape_factor * gkern(kernel_size, 10)
 kernel_sharp -= (kernel_reshape_factor - 1) / kernel_size ** 2
 print(np.sum(kernel_sharp))
+print(gkern(kernel_size, 10))
 
 sharpened = cv2.filter2D(blurred, -1, kernel_sharp)
 

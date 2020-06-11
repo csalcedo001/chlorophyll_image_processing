@@ -35,7 +35,7 @@ def detect_objects(
 	contours = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 	contours = contours[0] if len(contours) == 2 else contours[1]
 
-	return cnts
+	return contours
 
 def get_colors(
 	image,

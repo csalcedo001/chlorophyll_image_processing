@@ -1,5 +1,5 @@
 import cv2
-from functions import *
+from functions.main import *
 
 source_image_path = "data/input/test_images/extract_2.png"
 target_image_path = "data/input/test_images/extract_3.png"

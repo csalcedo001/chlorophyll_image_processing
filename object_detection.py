@@ -144,9 +144,15 @@ for directory in os.listdir("data/input"):
 			else:
 				box_color = (36,255,12)
 
+			cluster_points = []
+
 			for i in range(len(valid_points)):
 				if kmeans.labels_[i] == index:
+					cluster_points.append(color.rgb2lab(image[valid_points[i][0], valid_points[i][1]][::-1]))
 					image[valid_points[i][0], valid_points[i][1]] = [36, 255, 12]
+
+			print(np.average(cluster_points,axis=0))
+			print(np.std(cluster_points,axis=0))
 
 			cv2.rectangle(image, (x, y), (x + w, y + h), box_color, 2)
 			ROI = original[y:y+h, x:x+w]

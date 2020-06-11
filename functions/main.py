@@ -16,7 +16,7 @@ def detect_objects(
 	original_image -- image from which objects are recognized.
 
 	Returns:
-	cnts -- contours of detected objects
+	contours -- contours of detected objects
 	"""
 	image = original_image.copy()
 
@@ -31,8 +31,8 @@ def detect_objects(
 	dilate = cv2.dilate(canny, kernel, iterations=1)
 
 	# Find contours
-	cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-	cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+	contours = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+	contours = contours[0] if len(contours) == 2 else contours[1]
 
 	return cnts
 
@@ -41,7 +41,6 @@ def get_colors(
 	contours,
 	number_of_clusters=3,
 	real_color_function=real_color.biggest_cluster,
-	real_color_box=False,
 	filter_out_of_range=True
 ):
 	"""

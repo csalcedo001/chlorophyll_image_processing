@@ -3,6 +3,7 @@ import numpy as np
 from sklearn.cluster import KMeans
 
 from functions import choose_color
+from functions import choose_valid_points
 from functions import lab_processing
 
 def detect_objects(
@@ -40,6 +41,7 @@ def get_colors(
 	image,
 	contours,
 	number_of_clusters=3,
+	choose_valid_points=choose_valid_points.ellipse,
 	choose_color=choose_color.biggest_cluster,
 	filter_out_of_range=True
 ):
@@ -64,25 +66,8 @@ def get_colors(
 
 		if filter_out_of_range and (w < 100 or h < 100):
 			continue
-		
-		valid_points = []
-	
-		# Evaluate only points inside ellipse
-		for row in range(y, y + h):
-			for col in range(x, x + w):
-				# Points to be transformed in the plane
-				y_tran = row
-				x_tran = col
-	
-				# Move center of coordinates to center of object
-				y_tran = y_tran - y - h / 2
-				x_tran = x_tran - x - w / 2
-	
-				# Scale plane to match radius = width of image
-				y_tran = y_tran * w / h
-				
-				if 2 * np.sqrt(y_tran ** 2 + x_tran ** 2) <= w:
-					valid_points.append([row, col])
+
+		valid_points = choose_valid_points(x, y, w, h)
 	
 		# Group selected points into clusters
 		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))

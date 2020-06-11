@@ -12,14 +12,15 @@ import cv2
 import numpy as np
 from skimage import color
 
-from functions.main import *
+from functions.utils import full_image_contour
+from functions.main import get_colors
 
 image_path = sys.argv[1]
 
 image = cv2.imread(image_path)
 
-contour = np.array([[[[0, 0]], [[image.shape[1] - 1, image.shape[0] - 1]]]])
+contour = full_image_contour(image)
 
-colors = get_colors(image, contour, filter_out_of_range=False)
+colors = get_colors(image, [contour], filter_out_of_range=False)
 
 print(color.rgb2lab(colors[0][::-1]) / 100)

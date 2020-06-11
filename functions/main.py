@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 from sklearn.cluster import KMeans
 
-from functions import real_color
+from functions import choose_color
 from functions import lab_processing
 
 def detect_objects(
@@ -16,7 +16,7 @@ def detect_objects(
 	original_image -- image from which objects are recognized.
 
 	Returns:
-	contours -- contours of detected objects
+	contours -- contours of detected objects.
 	"""
 	image = original_image.copy()
 
@@ -40,7 +40,7 @@ def get_colors(
 	image,
 	contours,
 	number_of_clusters=3,
-	real_color_function=real_color.biggest_cluster,
+	choose_color=choose_color.biggest_cluster,
 	filter_out_of_range=True
 ):
 	"""
@@ -50,8 +50,8 @@ def get_colors(
 	image -- image from which objects are recognized.
 	contours -- list of contours of detected objects.
 	number_of_clusters -- used in k-means clustering.
-	real_color_function -- function to calculate color from a single object.
-	filter_our_of_range -- if True, prevents small objects to be evaluated.
+	choose_color -- function to obtain the representative color of an object.
+	filter_our_of_range -- if True, prevents small objects to be considered.
 
 	Returns
 	lab_colors -- list of colors associated with objects.
@@ -85,11 +85,11 @@ def get_colors(
 					valid_points.append([row, col])
 	
 		# Group selected points into clusters
-		kmeans = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))
+		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))
 	
 	
-		# Find color from clustered points
-		object_color = real_color_function(kmeans)
+		# Select color from clustered points
+		object_color = choose_color(clusters)
 
 		lab_colors.append(object_color)
 

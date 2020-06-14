@@ -17,6 +17,6 @@ def full_image_contour(image):
 	width -= 1
 	height -= 1
 
-	contour = np.array([[[0, 0]], [[0, width]], [[height, width]], [[height, 0]]])
+	contour = np.array([[[0, 0]], [[0, height]], [[width, height]], [[width, 0]]])
 
 	return contour

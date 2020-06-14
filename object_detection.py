@@ -6,6 +6,8 @@ from matplotlib import pyplot as plt
 from sklearn.cluster import KMeans
 import scipy.stats as st
 
+from functions import choose_color
+
 # TODO: Detection mechanism: Invalid sample
 
 real_box_color = False
@@ -124,17 +126,18 @@ for directory in os.listdir("data/input"):
 			#index = kmeans_dists.index(min([np.linalg.norm(mean) for mean in kmeans.cluster_centers_]))
 		
 			# Second approach: find biggest cluster
-			mean_count = [0] * number_of_clusters
+			#mean_count = [0] * number_of_clusters
 		
-			for label in kmeans.labels_:
-				mean_count[label] += 1
-			
-			index = mean_count.index(max(mean_count))
+			#for label in kmeans.labels_:
+			#	mean_count[label] += 1
+			#
+			#index = mean_count.index(max(mean_count))
 		
 			# Third approach: find cluster with smallest standard deviation
 			# ...
 		
-			object_color = kmeans.cluster_centers_[index]
+			#object_color = kmeans.cluster_centers_[index]
+			object_color, index = choose_color.biggest_colored_cluster(kmeans)
 		
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
 			print("Object", image_number, "color: ", object_color)

@@ -39,8 +39,25 @@ for filename in os.listdir("data/input/" + directory):
 rgb_colors = np.concatenate(colors, axis=0)[:,::-1]
 lab_colors = [color.rgb2lab(pixel) / 100 for pixel in rgb_colors]
 
-with open("data/lab_cluster_colors.json", "w") as output_file:
-	json.dump(np.array(lab_colors).tolist(), output_file)
-
 clusters = KMeans(n_clusters=4, random_state=0).fit(lab_colors)
 print(clusters.cluster_centers_)
+
+labels = ["red", "blue", "green", "none"]
+color_labels = []
+
+for cluster_center in clusters.cluster_centers_:
+	print("Labels (red, blue, green or white):")
+
+	color_input = None
+
+	while color_input not in labels:
+		color_input = input("Cluster center " + str(cluster_center) + " color: ")
+	
+	color_labels.append(color_input)
+
+with open("data/lab_cluster_colors.json", "w") as output_file:
+	json.dump({
+		"colors": np.array(lab_colors).tolist(),
+		"labels": color_labels
+	}, output_file)
+

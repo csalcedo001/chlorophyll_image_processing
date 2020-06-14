@@ -53,10 +53,8 @@ def biggest_colored_cluster(clusters):
 	reference_labels = lab_color_data["labels"]
 	reference_clusters = KMeans(n_clusters=4, random_state=0).fit(lab_color_data["colors"])
 
-
 	for index in indices:
-		print(reference_labels[reference_clusters.predict([color.rgb2lab(clusters.cluster_centers_[index])])[0]])
-		if reference_labels[reference_clusters.predict([color.rgb2lab(clusters.cluster_centers_[index])])[0]] != "none":
+		if reference_labels[reference_clusters.predict([color.rgb2lab(clusters.cluster_centers_[index,::-1]) / 100])[0]] != "white":
 			return clusters.cluster_centers_[index], index
 	
 	index = indices[0]

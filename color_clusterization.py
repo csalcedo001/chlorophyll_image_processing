@@ -3,10 +3,12 @@ import numpy as np
 import cv2
 from sklearn.cluster import KMeans
 from skimage import color
+import matplotlib.pyplot as plt
 import json
 
 from functions.main import detect_objects
 from functions import choose_valid_points
+from mpl_toolkits.mplot3d import Axes3D
 
 colors = []
 
@@ -42,7 +44,7 @@ lab_colors = [color.rgb2lab(pixel) / 100 for pixel in rgb_colors]
 clusters = KMeans(n_clusters=4, random_state=0).fit(lab_colors)
 print(clusters.cluster_centers_)
 
-labels = ["red", "blue", "green", "none"]
+labels = ["red", "blue", "green", "white"]
 color_labels = []
 
 for cluster_center in clusters.cluster_centers_:
@@ -61,3 +63,11 @@ with open("data/lab_cluster_colors.json", "w") as output_file:
 		"labels": color_labels
 	}, output_file)
 
+lab_colors = np.array(lab_colors)
+
+fig = plt.figure()
+ax = Axes3D(fig)
+ax.scatter(lab_colors[:,0], lab_colors[:,1], lab_colors[:,2], c=np.array([color_labels[clusters.labels_[i]] for i in range(len(lab_colors))]))
+plt.show()
+plt.scatter(a, b)
+plt.show()

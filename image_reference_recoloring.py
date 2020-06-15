@@ -1,6 +1,6 @@
 """
 Use image from REFERENCE_IMAGE_PATH to adjust color of image
-from TARGET_IMAGE_PATH saving the result image in RESULT_PATH
+from TARGET_IMAGE_PATH. The result image is saved in RESULT_PATH
 """
 
 import sys

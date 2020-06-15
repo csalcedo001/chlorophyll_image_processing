@@ -1,6 +1,5 @@
 """
-Use image from REFERENCE_IMAGE_PATH to adjust color of image
-from TARGET_IMAGE_PATH saving the result image in RESULT_PATH
+Load image from IMAGE_PATH, detect the objects in it and print their colors.
 """
 
 import sys
@@ -24,6 +23,5 @@ image = cv2.imread(image_path)
 contours = detect_objects(image)
 colors = get_colors(image, contours, choose_color = choose_color.biggest_colored_cluster)
 
+print("RGB color of objects:")
 print(colors)
-
-#cv2.imwrite(result_path, recolored_image)

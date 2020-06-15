@@ -1,3 +1,9 @@
+"""
+Plots pixels from data/lab_cluster_colors.json in a 3D graphic
+with the colors of each pixel associated with the label color
+given to its cluster.
+"""
+
 import numpy as np
 import matplotlib.pyplot as plt
 import json

@@ -15,7 +15,6 @@ from skimage import color
 from functions.utils import full_image_contour
 from functions.main import get_colors
 from functions import choose_valid_points
-from functions import choose_color
 
 image_path = sys.argv[1]
 

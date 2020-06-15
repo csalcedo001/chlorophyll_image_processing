@@ -74,11 +74,11 @@ def get_colors(
 	
 	
 		# Select color from clustered points
-		object_color = choose_color(clusters)
+		object_color, _ = choose_color(clusters)
 
 		lab_colors.append(object_color)
 
-	return lab_colors
+	return np.array(lab_colors)
 
 def image_recoloring(target_image, target_colors, reference_colors):
 	"""

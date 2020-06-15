@@ -1,14 +1,18 @@
+"""
+Loads all images from data/input/plant_images, detect their colors
+and clusterize them. By giving the labels of each color as input, these
+clusters are saved in data/lab_cluster_colors.json.
+"""
+
 import os
 import numpy as np
 import cv2
+import json
 from sklearn.cluster import KMeans
 from skimage import color
-import matplotlib.pyplot as plt
-import json
 
 from functions.main import detect_objects
 from functions import choose_valid_points
-from mpl_toolkits.mplot3d import Axes3D
 
 colors = []
 
@@ -32,9 +36,10 @@ for filename in os.listdir("data/input/" + directory):
 			continue
 
 		valid_points = choose_valid_points(x, y, w, h)
+		valid_colors = np.array([image[p[0], p[1]] for p in valid_points])
 	
 		# Group selected points into clusters
-		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))
+		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(valid_colors)
 
 		colors.append(clusters.cluster_centers_)
 
@@ -62,12 +67,3 @@ with open("data/lab_cluster_colors.json", "w") as output_file:
 		"colors": np.array(lab_colors).tolist(),
 		"labels": color_labels
 	}, output_file)
-
-lab_colors = np.array(lab_colors)
-
-fig = plt.figure()
-ax = Axes3D(fig)
-ax.scatter(lab_colors[:,0], lab_colors[:,1], lab_colors[:,2], c=np.array([color_labels[clusters.labels_[i]] for i in range(len(lab_colors))]))
-plt.show()
-plt.scatter(a, b)
-plt.show()

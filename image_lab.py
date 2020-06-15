@@ -5,7 +5,7 @@ Find LAB color of image from IMAGE_PATH.
 import sys
 
 if len(sys.argv) != 2:
-	print("Usage: python3 image_recoloring.py <image_path>")
+	print("Usage: python3 image_lab.py <image_path>")
 	exit()
 
 import cv2

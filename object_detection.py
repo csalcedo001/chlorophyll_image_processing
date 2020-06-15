@@ -140,7 +140,7 @@ for directory in os.listdir("data/input"):
 			object_color, index = choose_color.biggest_colored_cluster(kmeans)
 		
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
-			print("Object", image_number, "color: ", object_color)
+			print("  Object", image_number, "color: ", object_color)
 		
 			if real_box_color:
 				box_color = object_color
@@ -154,8 +154,8 @@ for directory in os.listdir("data/input"):
 					cluster_points.append(color.rgb2lab(image[valid_points[i][0], valid_points[i][1]][::-1]))
 					image[valid_points[i][0], valid_points[i][1]] = [36, 255, 12]
 
-			print(np.average(cluster_points,axis=0))
-			print(np.std(cluster_points,axis=0))
+			print("    Average: " + str(np.average(cluster_points,axis=0)))
+			print("    Standard deviation: " + str(np.std(cluster_points,axis=0)))
 
 			cv2.rectangle(image, (x, y), (x + w, y + h), box_color, 2)
 			ROI = original[y:y+h, x:x+w]

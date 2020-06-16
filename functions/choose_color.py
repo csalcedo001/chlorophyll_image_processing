@@ -7,7 +7,10 @@ Arguments:
 clusters -- made up of pixels from some image.
 
 Returns:
-object_color -- chosen color for the object.
+object_color_data -- dictionary of data:
+	color -- chosen color for the object.
+	index -- of the selected cluster.
+	label -- color label given to the cluster.
 """
 
 from sklearn.cluster import KMeans
@@ -27,8 +30,14 @@ def biggest_cluster(clusters):
 	index = mean_count.index(max(mean_count))
 	
 	object_color = clusters.cluster_centers_[index]
+	
+	obejct_color_data = {
+		"color": object_color,
+		"index": index,
+		"label": "none"
+	}
 
-	return object_color, index, "none"
+	return object_color_data
 
 def biggest_colored_cluster(clusters):
 	"""
@@ -57,10 +66,17 @@ def biggest_colored_cluster(clusters):
 		color_label = reference_labels[reference_clusters.predict([color.rgb2lab(clusters.cluster_centers_[index,::-1]) / 100])[0]]
 
 		if color_label != "white":
-			return clusters.cluster_centers_[index], index, color_label
+			object_color = clusters.cluster_centers_[index]
+			break
+	else:
+		index = indices[0]
+		object_color = clusters.cluster_centers_[index]
+		color_label = "white"
 	
-	index = indices[0]
-	
-	object_color = clusters.cluster_centers_[index]
+	object_color_data = {
+		"color": object_color,
+		"index": index,
+		"label": color_label
+	}
 
-	return object_color, index, "white"
+	return object_color_data

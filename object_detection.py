@@ -140,7 +140,11 @@ for path, subdirs, files in os.walk(input_directory_path):
 			# ...
 		
 			#object_color = kmeans.cluster_centers_[index]
-			object_color, index, color_label = choose_color.biggest_colored_cluster(kmeans)
+			object_color_data = choose_color.biggest_colored_cluster(kmeans)
+
+			object_color = object_color_data["color"]
+			index = object_color_data["index"]
+			color_label object_color_data["label"]
 		
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
 			print("  Object", image_number, "color ", object_color, " detected as ", color_label)

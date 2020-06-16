@@ -72,7 +72,11 @@ for path, subdirs, files in os.walk(directory_path):
 	
 	
 			# Select color from clustered points
-			object_color, index, color_label = choose_color(clusters)
+			object_color_data = choose_color(clusters)
+
+			object_color = object_color_data["color"]
+			index = object_color_data["index"]
+			color_label = object_color_data["label"]
 
 			
 		

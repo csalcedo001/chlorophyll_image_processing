@@ -74,7 +74,7 @@ def get_colors(
 	
 	
 		# Select color from clustered points
-		object_color, _, _ = choose_color(clusters)
+		object_color = choose_color(clusters)["color"]
 
 		lab_colors.append(object_color)
 

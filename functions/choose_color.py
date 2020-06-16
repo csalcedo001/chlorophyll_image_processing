@@ -28,7 +28,7 @@ def biggest_cluster(clusters):
 	
 	object_color = clusters.cluster_centers_[index]
 
-	return object_color, index
+	return object_color, index, "none"
 
 def biggest_colored_cluster(clusters):
 	"""

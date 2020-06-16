@@ -6,7 +6,7 @@ from TARGET_IMAGE_PATH. The result image is saved in RESULT_PATH
 import sys
 
 if len(sys.argv) not in [3, 4]:
-	print("Usage: python3 image_recoloring.py <reference_image_path> <target_image_path> [<result_path>]")
+	print("Usage: python3 image_reference_recoloring.py <reference_image_path> <target_image_path> [<result_path>]")
 	exit()
 
 import cv2

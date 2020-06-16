@@ -27,4 +27,5 @@ colors = get_colors(image, [contour],
 	filter_out_of_range=False
 )
 
+print("LAB color of image")
 print(color.rgb2lab(colors[0][::-1]) / 100)

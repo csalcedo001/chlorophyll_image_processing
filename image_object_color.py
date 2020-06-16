@@ -5,7 +5,7 @@ Load image from IMAGE_PATH, detect the objects in it and print their colors.
 import sys
 
 if len(sys.argv) not in [2, 3]:
-	print("Usage: python3 image_color.py <image_path> [<result_path>]")
+	print("Usage: python3 image_object_color.py <image_path> [<result_path>]")
 	exit()
 
 import cv2

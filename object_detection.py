@@ -24,10 +24,13 @@ kernel_index = 1
 kernel_size = 2 * kernel_index + 1
 kernel_reshape_factor = 2
 
-for directory in os.listdir("data/input"):
-	for filename in os.listdir("data/input/" + directory):
-		input_path = "data/input/" + directory + "/" + filename
-		output_path = "data/output/" + directory + "/" + filename
+input_directory_path = "data/input"
+output_directory_path = "data/output"
+
+for path, subdirs, files in os.walk(input_directory_path):
+	for filename in files:
+		input_path = os.path.join(path, filename)
+		output_path = os.path.join(output_directory_path + path[len(input_directory_path):], filename)
 
 		print(input_path)
 
@@ -76,11 +79,11 @@ for directory in os.listdir("data/input"):
 		kernel = np.ones((5,5),np.uint8)
 		dilate = cv2.dilate(canny, kernel, iterations=1)
 
-		cv2.imwrite("data/lab/" + directory + "/" + filename, hue_image)
-		cv2.imwrite("data/gray/" + directory + "/" + filename, gray)
-		cv2.imwrite("data/blurred/" + directory + "/" + filename, blurred)
-		#cv2.imwrite("data/sharpened/" + directory + "/" + filename, sharpened)
-		cv2.imwrite("data/canny/" + directory + "/" + filename, canny)
+		#cv2.imwrite("data/lab/" + directory + "/" + filename, hue_image)
+		#cv2.imwrite("data/gray/" + directory + "/" + filename, gray)
+		#cv2.imwrite("data/blurred/" + directory + "/" + filename, blurred)
+		##cv2.imwrite("data/sharpened/" + directory + "/" + filename, sharpened)
+		#cv2.imwrite("data/canny/" + directory + "/" + filename, canny)
 
 		# Find contours
 		cnts = cv2.findContours(dilate, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -137,10 +140,10 @@ for directory in os.listdir("data/input"):
 			# ...
 		
 			#object_color = kmeans.cluster_centers_[index]
-			object_color, index = choose_color.biggest_colored_cluster(kmeans)
+			object_color, index, color_label = choose_color.biggest_colored_cluster(kmeans)
 		
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
-			print("  Object", image_number, "color: ", object_color)
+			print("  Object", image_number, "color ", object_color, " detected as ", color_label)
 		
 			if real_box_color:
 				box_color = object_color

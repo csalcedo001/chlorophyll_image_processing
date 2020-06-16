@@ -1,3 +1,7 @@
+"""
+Get color data from images and store it in CSV format.
+"""
+
 import sys
 
 if len(sys.argv) not in [1, 2]:

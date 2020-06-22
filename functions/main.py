@@ -1,6 +1,8 @@
 import cv2
+import json
 import numpy as np
 from sklearn.cluster import KMeans
+import skimage
 
 from functions import choose_color
 from functions import choose_valid_points
@@ -106,18 +108,33 @@ def image_recoloring(target_image, target_colors, reference_colors):
 	recolored_image -- image whose colors are as close as possible to those of reference_colors
 	"""
 
-	rate = 1
-	rate_count = 0
+	lab_color_data = None
+
+	with open("data/lab_cluster_colors.json") as input_file:
+		lab_color_data = json.load(input_file)
+	
+	labels = lab_color_data["labels"]
+	clusters = KMeans(n_clusters=4, random_state=0).fit(lab_color_data["colors"])
+
+	rate = 0
+	rate_count = 1
+
+	color_total = np.array([0., 0., 0.])
 
 	for color in ["red", "blue"]:
 		if color in target_colors and color in reference_colors:
-			rate *= reference_colors[color] / target_colors[color]
+			cluster_lab_color = clusters.cluster_centers_[labels.index(color)]
+			cluster_rgb_color = skimage.color.lab2rgb(cluster_lab_color)
+
+			color_weights = cluster_rgb_color / sum(cluster_rgb_color)
+
+			color_total += color_weights
+
+			rate += color_weights * np.log(reference_colors[color] / target_colors[color])
 			rate_count += 1
 	
-	if rate_count == 0:
-		recolored_image = target_image
-	else:
-		rate = rate ** (1 / rate_count)
-		recolored_image = target_image * rate
+	rate = np.exp(rate / color_total / rate_count)
+
+	recolored_image = target_image * rate
 	
 	return recolored_image

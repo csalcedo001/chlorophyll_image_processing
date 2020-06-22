@@ -24,10 +24,10 @@ reference_image = cv2.imread(reference_image_path)
 target_image = cv2.imread(target_image_path)
 
 reference_contours = detect_objects(reference_image)
-reference_colors = get_colors(reference_image, reference_contours)
+reference_colors = get_colors(reference_image, reference_contours)["image_colors"]
 
 target_contours = detect_objects(target_image)
-target_colors = get_colors(target_image, target_contours)
+target_colors = get_colors(target_image, target_contours)["image_colors"]
 
 recolored_image = image_recoloring(target_image, target_colors, reference_colors)
 

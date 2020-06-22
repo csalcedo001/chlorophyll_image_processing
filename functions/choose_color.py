@@ -31,7 +31,7 @@ def biggest_cluster(clusters):
 	
 	object_color = clusters.cluster_centers_[index]
 	
-	obejct_color_data = {
+	object_color_data = {
 		"color": object_color,
 		"index": index,
 		"label": "none"

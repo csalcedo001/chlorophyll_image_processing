@@ -25,7 +25,7 @@ contour = full_image_contour(image)
 colors = get_colors(image, [contour],
 	choose_valid_points=choose_valid_points.all,
 	filter_out_of_range=False
-)
+)["object_colors"]
 
 print("LAB color of image")
-print(color.rgb2lab(colors[0][::-1]) / 100)
+print(color.rgb2lab(colors[0]["color"][::-1]) / 100)

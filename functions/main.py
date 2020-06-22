@@ -42,7 +42,7 @@ def get_colors(
 	contours,
 	number_of_clusters=3,
 	choose_valid_points=choose_valid_points.ellipse,
-	choose_color=choose_color.biggest_cluster,
+	choose_color=choose_color.biggest_colored_cluster,
 	filter_out_of_range=True
 ):
 	"""
@@ -53,7 +53,8 @@ def get_colors(
 	contours -- list of contours of detected objects.
 	number_of_clusters -- used in k-means clustering.
 	choose_color -- function to obtain the representative color of an object.
-	filter_our_of_range -- if True, prevents small objects to be considered.
+	choose_valid_points -- function to obtain the set of valid points from an object.
+	filter_out_of_range -- if True, prevents small objects to be considered.
 
 	Returns
 	lab_colors -- list of colors associated with objects.
@@ -74,11 +75,22 @@ def get_colors(
 	
 	
 		# Select color from clustered points
-		object_color = choose_color(clusters)["color"]
+		object_color_data = choose_color(clusters)
 
-		lab_colors.append(object_color)
+		lab_colors.append(object_color_data)
+	
+	image_colors = {}
 
-	return np.array(lab_colors)
+	for lab_color in lab_colors[::-1]:
+		if lab_color["label"] in ["red", "blue"]:
+			image_colors[lab_color["label"]] = lab_color["color"]
+
+	image_color_data = {
+		"object_colors": lab_colors,
+		"image_colors": image_colors
+	}
+
+	return image_color_data
 
 def image_recoloring(target_image, target_colors, reference_colors):
 	"""
@@ -94,11 +106,18 @@ def image_recoloring(target_image, target_colors, reference_colors):
 	recolored_image -- image whose colors are as close as possible to those of reference_colors
 	"""
 
-	target_colors = np.array(target_colors)
-	reference_colors = np.array(reference_colors)
+	rate = 1
+	rate_count = 0
 
-	rate = np.sum(reference_colors / target_colors, axis=0) / len(target_colors)
+	for color in ["red", "blue"]:
+		if color in target_colors and color in reference_colors:
+			rate *= reference_colors[color] / target_colors[color]
+			rate_count += 1
 	
-	recolored_image = target_image * rate
-
+	if rate_count == 0:
+		recolored_image = target_image
+	else:
+		rate = rate ** (1 / rate_count)
+		recolored_image = target_image * rate
+	
 	return recolored_image

@@ -44,7 +44,7 @@ for filename in os.listdir("data/input/" + directory):
 		colors.append(clusters.cluster_centers_)
 
 rgb_colors = np.concatenate(colors, axis=0)[:,::-1]
-lab_colors = [color.rgb2lab(pixel) / 100 for pixel in rgb_colors]
+lab_colors = [color.rgb2lab(pixel / 255) for pixel in rgb_colors]
 
 clusters = KMeans(n_clusters=4, random_state=0).fit(lab_colors)
 print(clusters.cluster_centers_)

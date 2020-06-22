@@ -28,4 +28,4 @@ colors = get_colors(image, [contour],
 )["object_colors"]
 
 print("LAB color of image")
-print(color.rgb2lab(colors[0]["color"][::-1]) / 100)
+print(color.rgb2lab(colors[0]["color"][::-1] / 255))

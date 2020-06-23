@@ -4,6 +4,8 @@ and clusterize them. By giving the labels of each color as input, these
 clusters are saved in data/lab_cluster_colors.json.
 """
 
+# TODO: Receive as input the directory and number of clusters
+
 import os
 import numpy as np
 import cv2

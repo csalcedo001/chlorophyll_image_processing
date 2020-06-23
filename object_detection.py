@@ -144,7 +144,7 @@ for path, subdirs, files in os.walk(input_directory_path):
 
 			object_color = object_color_data["color"]
 			index = object_color_data["index"]
-			color_label object_color_data["label"]
+			color_label = object_color_data["label"]
 		
 			#print("Object", image_number, "color: ", color.rgb2lab(object_color))
 			print("  Object", image_number, "color ", object_color, " detected as ", color_label)

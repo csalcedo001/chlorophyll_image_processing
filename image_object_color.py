@@ -24,4 +24,4 @@ contours = detect_objects(image)
 colors = get_colors(image, contours, choose_color = choose_color.biggest_colored_cluster)
 
 print("RGB color of objects:")
-print(colors)
+print([object_color_data["color"].tolist() for object_color_data in colors["object_colors"]])

@@ -39,6 +39,7 @@ def detect_objects(
 
 	return contours
 
+# TODO: Return RGB instead of BGR from image colors
 def get_colors(
 	image,
 	contours,
@@ -130,10 +131,10 @@ def image_recoloring(target_image, target_colors, reference_colors):
 
 			color_total += color_weights
 
-			rate += color_weights * np.log(reference_colors[color] / target_colors[color])
+			rate += color_weights * reference_colors[color] / target_colors[color]
 			rate_count += 1
 	
-	rate = np.exp(rate / color_total / rate_count)
+	rate = rate / color_total
 
 	recolored_image = target_image * rate
 	

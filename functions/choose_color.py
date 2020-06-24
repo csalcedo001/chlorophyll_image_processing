@@ -7,15 +7,14 @@ Arguments:
 clusters -- made up of pixels from some image.
 
 Returns:
-object_color_data -- dictionary of data:
-	color -- chosen color for the object.
-	index -- of the selected cluster.
-	label -- color label given to the cluster.
+  index -- index of selected cluster.
 """
 
 from sklearn.cluster import KMeans
 from skimage import color
 import json
+
+from functions.color import Color
 
 def biggest_cluster(clusters):
 	"""
@@ -29,15 +28,7 @@ def biggest_cluster(clusters):
 	
 	index = mean_count.index(max(mean_count))
 	
-	object_color = clusters.cluster_centers_[index]
-	
-	object_color_data = {
-		"color": object_color,
-		"index": index,
-		"label": "none"
-	}
-
-	return object_color_data
+	return index
 
 def biggest_colored_cluster(clusters):
 	"""
@@ -54,29 +45,10 @@ def biggest_colored_cluster(clusters):
 	
 	indices.sort(key=lambda index : -mean_count[index])
 
-	lab_color_data = None
-
-	with open("data/lab_cluster_colors.json") as input_file:
-		lab_color_data = json.load(input_file)
-	
-	reference_labels = lab_color_data["labels"]
-	reference_clusters = KMeans(n_clusters=4, random_state=0).fit(lab_color_data["colors"])
-
 	for index in indices:
-		color_label = reference_labels[reference_clusters.predict([color.rgb2lab(clusters.cluster_centers_[index,::-1] / 255)])[0]]
-
-		if color_label != "white":
-			object_color = clusters.cluster_centers_[index]
+		if Color(clusters.cluster_centers_[index], "BGR").label() != "white":
 			break
 	else:
 		index = indices[0]
-		object_color = clusters.cluster_centers_[index]
-		color_label = "white"
 	
-	object_color_data = {
-		"color": object_color,
-		"index": index,
-		"label": color_label
-	}
-
-	return object_color_data
+	return index

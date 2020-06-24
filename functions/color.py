@@ -4,6 +4,7 @@ from sklearn.cluster import KMeans
 import json
 
 class Color():
+	format = None
 	clusters = None
 	labels = None
 
@@ -48,15 +49,19 @@ class Color():
 	
 	def label(self):
 		if Color.clusters == None:
-			lab_color_data = None
+			color_cluster_data = None
 
 			with open("data/lab_cluster_colors.json") as input_file:
-				lab_color_data = json.load(input_file)
+				color_cluster_data = json.load(input_file)
 			
-			Color.labels = lab_color_data["labels"]
-			Color.clusters = KMeans(n_clusters=4, random_state=0).fit(lab_color_data["colors"])
+			Color.format = color_cluster_data["format"]
+			Color.labels = color_cluster_data["labels"]
+			Color.clusters = KMeans(
+				n_clusters=color_cluster_data["number_of_clusters"],
+				random_state=color_cluster_data["random_seed"]
+			).fit(color_cluster_data["colors"])
 
-		return Color.labels[Color.clusters.predict([self.array("LAB")])[0]]
+		return Color.labels[Color.clusters.predict([self.array(Color.format)])[0]]
 			
 	
 	def __str__(self):

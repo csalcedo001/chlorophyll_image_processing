@@ -15,12 +15,15 @@ from skimage import color
 
 from functions.main import detect_objects
 from functions import choose_valid_points
+from functions.color import Color
 
 colors = []
 
 directory = "plant_images"
 number_of_clusters = 4
+random_state = 0
 choose_valid_points = choose_valid_points.ellipse
+clustering_format = "LAB"
 
 for filename in os.listdir("data/input/" + directory):
 	input_path = "data/input/" + directory + "/" + filename
@@ -43,12 +46,11 @@ for filename in os.listdir("data/input/" + directory):
 		# Group selected points into clusters
 		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(valid_colors)
 
-		colors.append(clusters.cluster_centers_)
+		colors.append([Color(color, "BGR").array(clustering_format) for color in clusters.cluster_centers_])
 
-rgb_colors = np.concatenate(colors, axis=0)[:,::-1]
-lab_colors = [color.rgb2lab(pixel / 255) for pixel in rgb_colors]
+lab_colors = np.concatenate(np.array(colors), axis=0)
 
-clusters = KMeans(n_clusters=4, random_state=0).fit(lab_colors)
+clusters = KMeans(n_clusters=number_of_clusters, random_state=random_state).fit(lab_colors)
 print(clusters.cluster_centers_)
 
 labels = ["red", "blue", "green", "white"]
@@ -57,15 +59,20 @@ color_labels = []
 for cluster_center in clusters.cluster_centers_:
 	print("Labels (red, blue, green or white):")
 
-	color_input = None
+	color_label = None
 
-	while color_input not in labels:
-		color_input = input("Cluster center " + str(cluster_center) + " color: ")
+	cluster_color = Color(cluster_center, clustering_format).array("RGB")
+
+	while color_label not in labels:
+		color_label = input("Cluster center " + str(cluster_color) + " color (in RGB format): ")
 	
-	color_labels.append(color_input)
+	color_labels.append(color_label)
 
 with open("data/lab_cluster_colors.json", "w") as output_file:
 	json.dump({
-		"colors": np.array(lab_colors).tolist(),
-		"labels": color_labels
+		"format": clustering_format,
+		"number_of_clusters": number_of_clusters,
+		"random_seed": random_state,
+		"labels": color_labels,
+		"colors": lab_colors.tolist()
 	}, output_file)

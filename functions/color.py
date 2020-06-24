@@ -7,9 +7,9 @@ class Color():
 	clusters = None
 	labels = None
 
-	def __init__(self, format_, color_):
+	def __init__(self, color_, format_):
 		if format_ not in ["RGB", "BGR", "LAB"]:
-			raise Exception("Unsupported color format " + format_)
+			raise Exception("Unsupported color format " + str(format_))
 
 		self.format_ = format_
 		self.color_ = np.array(color_)
@@ -42,7 +42,7 @@ class Color():
 			if self.format_ == "BGR":
 				result = skimage.color.rgb2lab(self.color_[::-1] / 255)
 		else:
-			raise Exception("Unsupported color format " + format_)
+			raise Exception("Unsupported color format " + str(format_))
 
 		return result
 	

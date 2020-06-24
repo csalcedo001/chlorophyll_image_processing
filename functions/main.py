@@ -7,6 +7,7 @@ import skimage
 from functions import choose_color
 from functions import choose_valid_points
 from functions import lab_processing
+from functions.color import Color
 
 def detect_objects(
 	original_image,
@@ -76,17 +77,19 @@ def get_colors(
 		# Group selected points into clusters
 		clusters = KMeans(n_clusters=number_of_clusters, random_state=0).fit(np.array([image[p[0]][p[1]] for p in valid_points]))
 	
-	
-		# Select color from clustered points
-		object_color_data = choose_color(clusters)
+		# Select index of cluster
+		index = choose_color(clusters)
+		object_color = Color(clusters.cluster_centers_[index], "BGR")
 
-		lab_colors.append(object_color_data)
+		lab_colors.append(object_color)
 	
 	image_colors = {}
 
+	lab_colors = np.array(lab_colors)
+
 	for lab_color in lab_colors[::-1]:
-		if lab_color["label"] in ["red", "blue"]:
-			image_colors[lab_color["label"]] = lab_color["color"]
+		if lab_color.label() in ["red", "blue"]:
+			image_colors[lab_color.label()] = lab_color
 
 	image_color_data = {
 		"object_colors": lab_colors,

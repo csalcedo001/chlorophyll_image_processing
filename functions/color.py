@@ -48,21 +48,24 @@ class Color():
 		return result
 	
 	def label(self):
-		if Color.clusters == None:
+		Color.load_cluster()
+
+		return Color.labels[Color.clusters.predict([self.array(Color.format)])[0]]
+	
+	def __str__(self):
+		return "Color in " + str(self.format_) + " format: " + str(np.round(self.color_).tolist())
+	
+	@classmethod
+	def load_cluster(cls):
+		if cls.clusters == None:
 			color_cluster_data = None
 
 			with open("data/lab_cluster_colors.json") as input_file:
 				color_cluster_data = json.load(input_file)
 			
-			Color.format = color_cluster_data["format"]
-			Color.labels = color_cluster_data["labels"]
-			Color.clusters = KMeans(
+			cls.format = color_cluster_data["format"]
+			cls.labels = color_cluster_data["labels"]
+			cls.clusters = KMeans(
 				n_clusters=color_cluster_data["number_of_clusters"],
 				random_state=color_cluster_data["random_seed"]
 			).fit(color_cluster_data["colors"])
-
-		return Color.labels[Color.clusters.predict([self.array(Color.format)])[0]]
-			
-	
-	def __str__(self):
-		return "Color in " + str(self.format_) + " format: " + str(np.round(self.color_).tolist())

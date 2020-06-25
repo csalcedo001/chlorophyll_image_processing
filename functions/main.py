@@ -30,7 +30,7 @@ def detect_objects(
 
 	gray = cv2.cvtColor(hue_image, cv2.COLOR_BGR2GRAY)
 	blurred = cv2.GaussianBlur(gray, (3, 3), 0)
-	canny = cv2.Canny(blurred, 120, 255, 1)
+	canny = cv2.Canny(blurred, 25, 100, 5)
 	kernel = np.ones((5,5),np.uint8)
 	dilate = cv2.dilate(canny, kernel, iterations=1)
 

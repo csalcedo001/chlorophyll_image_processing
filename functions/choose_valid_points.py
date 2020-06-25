@@ -22,8 +22,8 @@ def all(x, y, w, h):
 	"""
 
 	valid_points = np.array(list(itertools.product(
-		[col for col in range(x, x + w)],
-		[row for row in range(y, y + h)]
+		[row for row in range(y, y + h)],
+		[col for col in range(x, x + w)]
 	)))
 	
 	return valid_points

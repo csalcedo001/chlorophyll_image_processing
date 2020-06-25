@@ -112,32 +112,26 @@ def image_recoloring(target_image, target_colors, reference_colors):
 	recolored_image -- image whose colors are as close as possible to those of reference_colors
 	"""
 
-	lab_color_data = None
-
-	with open("data/lab_cluster_colors.json") as input_file:
-		lab_color_data = json.load(input_file)
-	
-	labels = lab_color_data["labels"]
-	clusters = KMeans(n_clusters=4, random_state=0).fit(lab_color_data["colors"])
+	Color.load_cluster()
 
 	rate = 0
 	rate_count = 1
 
-	color_total = np.array([0., 0., 0.])
+	color_weights_total = np.array([0., 0., 0.])
 
 	for color in ["red", "blue"]:
 		if color in target_colors and color in reference_colors:
-			cluster_lab_color = clusters.cluster_centers_[labels.index(color)]
-			cluster_rgb_color = skimage.color.lab2rgb(cluster_lab_color)
+			color_index = Color.labels.index(color)
+			cluster_color = Color(Color.clusters.cluster_centers_[color_index], Color.format).array("RGB")
 
-			color_weights = cluster_rgb_color / sum(cluster_rgb_color)
+			color_weights = cluster_color
 
-			color_total += color_weights
+			color_weights_total += color_weights
 
-			rate += color_weights * reference_colors[color] / target_colors[color]
+			rate += color_weights * reference_colors[color].array("RGB") / target_colors[color].array("RGB")
 			rate_count += 1
 	
-	rate = rate / color_total
+	rate = rate / color_weights_total
 
 	recolored_image = target_image * rate
 	

@@ -27,7 +27,7 @@ if len(sys.argv) == 2:
 	
 	plot_format = sys.argv[1]
 else:
-	plot_format = "RGB"
+	plot_format = "LAB"
 
 
 color_cluster_data = None

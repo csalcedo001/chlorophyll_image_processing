@@ -1,5 +1,5 @@
 """
-Find LAB color of image from IMAGE_PATH.
+Print color of image from IMAGE_PATH as COLOR_FORMAT.
 """
 
 import sys

@@ -1,6 +1,6 @@
 """
-Load image from IMAGE_PATH, detect the objects in it and print their colors
-as COLOR_FORMAT.
+Load image from IMAGE_PATH and print the color from the box
+with origin (X, Y) and dimensions (W ,H) as COLOR_FORMAT.
 """
 
 import sys

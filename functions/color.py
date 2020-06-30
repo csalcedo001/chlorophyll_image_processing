@@ -7,6 +7,7 @@ class Color():
 	format = None
 	clusters = None
 	labels = None
+	formats = ["RGB", "BGR", "LAB"]
 
 	def __init__(self, color_, format_):
 		if format_ not in ["RGB", "BGR", "LAB"]:
@@ -24,27 +25,9 @@ class Color():
 		if format_ == None:
 			return self.color_
 
-		result = self.color_
+		color_array = Color.transform(self.color_, self.format_, to=format_)
 
-		if format_ == "RGB":
-			if self.format_ == "BGR":
-				result = self.color_[::-1]
-			if self.format_ == "LAB":
-				result = skimage.color.lab2rgb(self.color_) * 255
-		elif format_ == "BGR":
-			if self.format_ == "RGB":
-				result = self.color_[::-1]
-			if self.format_ == "LAB":
-				result = skimage.color.lab2rgb(self.color_)[::-1] * 255
-		elif format_ == "LAB":
-			if self.format_ == "RGB":
-				result = skimage.color.rgb2lab(self.color_ / 255)
-			if self.format_ == "BGR":
-				result = skimage.color.rgb2lab(self.color_[::-1] / 255)
-		else:
-			raise Exception("Unsupported color format " + str(format_))
-
-		return result
+		return color_array 
 	
 	def label(self):
 		Color.load_cluster()
@@ -74,3 +57,31 @@ class Color():
 				n_clusters=color_cluster_data["number_of_clusters"],
 				random_state=color_cluster_data["random_seed"]
 			).fit(color_cluster_data["colors"])
+	
+	@classmethod
+	def transform(cls, color_array, from_, to):
+		if from_ not in cls.formats:
+			raise Exception("Unsupported color format " + str(from_))
+
+		if to not in cls.formats:
+			raise Exception("Unsupported color format " + str(to))
+
+		result = color_array = np.array(color_array)
+
+		if from_ == "RGB":
+			if to == "BGR":
+				result = color_array[::-1]
+			if to == "LAB":
+				result = skimage.color.rgb2lab(color_array / 255)
+		elif from_ == "BGR":
+			if to == "RGB":
+				result = color_array[::-1]
+			if to == "LAB":
+				result = skimage.color.rgb2lab(color_array[::-1] / 255)
+		elif from_ == "LAB":
+			if to == "RGB":
+				result = skimage.color.lab2rgb(color_array) * 255
+			if to == "BGR":
+				result = skimage.color.lab2rgb(color_array)[::-1] * 255
+
+		return result

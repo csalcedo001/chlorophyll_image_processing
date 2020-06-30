@@ -14,7 +14,6 @@ class Color():
 
 		self.format_ = format_
 		self.color_ = np.array(color_)
-	
 	def to(self, format_):
 		self.color_ = self.array(format_)
 		self.format_ = format_
@@ -53,6 +52,12 @@ class Color():
 		return Color.labels[Color.clusters.predict([self.array(Color.format)])[0]]
 	
 	def __str__(self):
+		if self.format_ == "LAB":
+			print_format = "[{color[0]:.2f}, {color[1]:.2f}, {color[2]:.2f}]"
+		else:
+			print_format = "[{color[0]:.0f}, {color[1]:.0f}, {color[2]:.0f}]"
+
+		return ("Color in {} format: " + print_format).format(self.format_, color=self.color_.tolist())
 		return "Color in " + str(self.format_) + " format: " + str(np.round(self.color_).tolist())
 	
 	@classmethod

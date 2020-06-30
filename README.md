@@ -6,7 +6,7 @@
 
 The file `image_color.py` is used to get the representative color of an image. The first argument is the path to the image in use. The second argument specifies the output format of the color chosen from the image. This is an optional argument, its default value is LAB color format.
 
-Note that `image_color.py` considers all the pixels from an image. Running the program with big pictures might take a long execution time.
+Note that `image_color.py` considers all the pixels from an image. Running the program with big pictures might take a long time.
 
 #### Examples
 

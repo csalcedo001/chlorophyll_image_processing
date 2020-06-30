@@ -19,6 +19,7 @@ from skimage import color
 from functions.main import detect_objects
 from functions import choose_color
 from functions import choose_valid_points
+from functions.color import Color
 
 # Arguments
 if len(sys.argv) == 2:
@@ -72,21 +73,19 @@ for path, subdirs, files in os.walk(directory_path):
 	
 	
 			# Select color from clustered points
-			object_color_data = choose_color(clusters)
+			index = choose_color(clusters)
 
-			object_color = object_color_data["color"]
-			index = object_color_data["index"]
-			color_label = object_color_data["label"]
-
+			object_color = Color(clusters.cluster_centers_[index], "BGR")
+			color_label = object_color.label()
 			
 		
-			print("  Object", image_number, "color: ", object_color)
+			print("  Object", image_number, "color: ", object_color.array("LAB"))
 
 			cluster_points = []
 
 			for i in range(len(valid_points)):
 				if clusters.labels_[i] == index:
-					cluster_points.append(color.rgb2lab(image[valid_points[i][0], valid_points[i][1]][::-1]))
+					cluster_points.append(Color.transform(image[valid_points[i][0], valid_points[i][1]], "BGR", to="LAB"))
 
 			average = np.average(cluster_points, axis=0)
 			standard_deviation = np.std(cluster_points, axis=0)

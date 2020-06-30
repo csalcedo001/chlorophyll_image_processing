@@ -2,11 +2,7 @@
 Print color of image from IMAGE_PATH as COLOR_FORMAT.
 """
 
-import sys
-
-if len(sys.argv) not in [2, 3]:
-	print("Usage: python3 image_color.py <image_path> [<color_format>]")
-	exit()
+import click
 
 import cv2
 import numpy as np
@@ -16,25 +12,25 @@ from functions.utils import full_image_contour
 from functions.main import get_colors
 from functions import choose_valid_points
 
-# Arguments
-if len(sys.argv) == 3:
-	if sys.argv[2] not in ["RGB", "BGR", "LAB"]:
-		raise Exception("Unsupported color format " + str(sys.argv[2]))
+@click.command()
+@click.argument('image_path', type=click.Path(exists=True))
+@click.option('--format', '-f', "color_format",
+	type=click.Choice(["RGB", "BGR", "LAB"],
+	case_sensitive=False),
+	default="LAB"
+)
+def main(image_path, color_format):
+	image = cv2.imread(image_path)
 	
-	color_format = sys.argv[2]
-else:
-	color_format = "LAB"
+	contour = full_image_contour(image)
+	
+	colors = get_colors(image, [contour],
+		choose_valid_points=choose_valid_points.all,
+		filter_out_of_range=False
+	)["object_colors"]
+	
+	print(colors[0].to(color_format))
 
-image_path = sys.argv[1]
 
-# Program
-image = cv2.imread(image_path)
-
-contour = full_image_contour(image)
-
-colors = get_colors(image, [contour],
-	choose_valid_points=choose_valid_points.all,
-	filter_out_of_range=False
-)["object_colors"]
-
-print(colors[0].to(color_format))
+if __name__ == "__main__":
+	print(main())

@@ -17,13 +17,12 @@ from mpl_toolkits.mplot3d import Axes3D
 from functions.color import Color
 
 @click.command()
-@click.argument('image_path', type=click.Path(exists=True))
 @click.option('--format', '-f', "plot_format",
 	type=click.Choice(["RGB", "BGR", "LAB"],
 	case_sensitive=False),
 	default="LAB"
 )
-def main(image_path, plot_format):
+def main(plot_format):
 	color_cluster_data = None
 	
 	with open("data/lab_cluster_colors.json") as input_file:

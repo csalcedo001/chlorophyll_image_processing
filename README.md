@@ -13,7 +13,7 @@ Note that `image_color.py` considers all the pixels from an image. Running the p
 Output the color of an image in RGB format.
 
 ```
-python3 image_color.py data/input/samples/cutted_image.png RGB
+python3 image_color.py data/input/samples/cutted_image.png -f RGB
 ```
 
 ### Image box color
@@ -25,5 +25,5 @@ The procedure behind `image_box_color.py` is similar to that of `image_color.py`
 Define a box in the middle of an image and print its color in LAB format.
 
 ```
-python3 image_box_color.py data/input/samples/full_image.jpeg 1900 1250 200 200 LAB
+python3 image_box_color.py data/input/samples/full_image.jpeg 1900 1250 200 200 -f LAB
 ```

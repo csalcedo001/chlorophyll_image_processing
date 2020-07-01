@@ -1,5 +1,13 @@
 # Chlorophyll level estimation
 
+## Setup
+
+To install the required python libraries for this project run `setup.sh`.
+
+```
+./setup.sh
+```
+
 ## Functionalities
 
 ### Image color

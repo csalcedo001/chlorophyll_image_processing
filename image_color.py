@@ -33,4 +33,4 @@ def main(image_path, color_format):
 
 
 if __name__ == "__main__":
-	print(main())
+	main()

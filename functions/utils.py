@@ -1,6 +1,8 @@
 import numpy as np
+import cv2
 import os
 import pathlib
+import wx
 
 def full_image_contour(image):
 	"""
@@ -55,3 +57,34 @@ def delete_unwanted_files(root):
 		print(path)
 		if ".DS_Store" in files:
 			os.system("rm " + os.path.join(path, ".DS_Store"))
+
+def image_resize(image):
+	"""
+	Resize image to make it fit on screen.
+
+	Arguments:
+	image -- image RGB matrix.
+	"""
+
+	wx.App(False)
+	screen_width, screen_height = wx.GetDisplaySize().Get()
+
+	screen_width -= 100
+	screen_height -= 100
+
+	image_height, image_width = image.shape[:2]
+
+	if image_width < screen_width and image_height < screen_height:
+		return
+	
+	width_factor = screen_width / image_width
+	height_factor = screen_height / image_height
+
+	if width_factor < height_factor:
+		factor = width_factor
+	else:
+		factor = height_factor
+	
+	resized_image = cv2.resize(image, (round(factor * screen_width), round(factor * screen_height)))
+
+	return resized_image

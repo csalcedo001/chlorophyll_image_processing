@@ -12,7 +12,7 @@ from functions.main import *
 @click.argument('image_path', type=click.Path(exists=True))
 @click.option('--format', '-f', "color_format",
 	type=click.Choice(["RGB", "BGR", "LAB"],
-	case_sensitive=False),
+		case_sensitive=False),
 	default="LAB",
 	show_default=True
 )

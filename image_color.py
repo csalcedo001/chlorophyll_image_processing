@@ -16,8 +16,9 @@ from functions import choose_valid_points
 @click.argument('image_path', type=click.Path(exists=True))
 @click.option('--format', '-f', "color_format",
 	type=click.Choice(["RGB", "BGR", "LAB"],
-	case_sensitive=False),
-	default="LAB"
+		case_sensitive=False),
+	default="LAB",
+	show_default=True
 )
 def main(image_path, color_format):
 	image = cv2.imread(image_path)

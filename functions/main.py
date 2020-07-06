@@ -47,7 +47,10 @@ def get_colors(
 	number_of_clusters=3,
 	choose_valid_points=choose_valid_points.ellipse,
 	choose_color=choose_color.biggest_colored_cluster,
-	filter_out_of_range=True
+	filter_out_of_range=True,
+	draw_box=False,
+	draw_points=False,
+	stats_format=None
 ):
 	"""
 	Calculates colors in IMAGE from each object in CONTOURS.
@@ -59,6 +62,9 @@ def get_colors(
 	choose_color -- function to obtain the representative color of an object.
 	choose_valid_points -- function to obtain the set of valid points from an object.
 	filter_out_of_range -- if True, prevents small objects to be considered.
+	draw_box -- if True, draw box in image.
+	draw_points -- if True, paint valid points in image.
+	stats_format -- prints object stats in the given format. If None is given, stats are not printed.
 
 	Returns
 	lab_colors -- list of colors associated with objects.
@@ -82,6 +88,28 @@ def get_colors(
 		object_color = Color(clusters.cluster_centers_[index], "BGR")
 
 		lab_colors.append(object_color)
+
+
+		# The following lines 
+		box_color = [36, 255, 12]
+	
+		if draw_box:
+			cv2.rectangle(image, (x, y), (x + w, y + h), box_color, 2)
+	
+		if draw_points or stats_format:
+			cluster_points = []
+	
+			for i in range(len(valid_points)):
+				if clusters.labels_[i] == index:
+					cluster_points.append(Color.transform(image[valid_points[i][0], valid_points[i][1]], "BGR", to=stats_format))
+	
+					if draw_points:
+						image[valid_points[i][0], valid_points[i][1]] = box_color
+	
+			if stats_format != None:
+				print(object_color.to(stats_format))
+				print("    Average: " + str(np.average(cluster_points,axis=0)))
+				print("    Standard deviation: " + str(np.std(cluster_points,axis=0)))
 	
 	image_colors = {}
 
@@ -90,11 +118,12 @@ def get_colors(
 	for lab_color in lab_colors[::-1]:
 		if lab_color.label() in ["red", "blue"]:
 			image_colors[lab_color.label()] = lab_color
-
+	
 	image_color_data = {
 		"object_colors": lab_colors,
 		"image_colors": image_colors
 	}
+
 
 	return image_color_data
 

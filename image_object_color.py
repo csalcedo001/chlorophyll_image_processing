@@ -16,16 +16,20 @@ from functions.main import *
 	default="LAB",
 	show_default=True
 )
-@click.option('--draw-box', '-b', is_flag=True)
-@click.option('--draw-points', '-p', is_flag=True)
-@click.option('--print-stats', '-s', is_flag=True)
+@click.option('--draw-box', '-b', is_flag=True,
+	help="show box around detected object")
+@click.option('--draw-points', '-p', is_flag=True,
+	help="paint cluster points that contribute to color")
+@click.option('--print-stats', '-s', is_flag=True,
+	help="print statistical information: color, points average and standard deviation")
 def main(image_path, color_format, draw_box, draw_points, print_stats):
-	image = cv2.imread(image_path)
-
 	stats_format = None
 
 	if print_stats:
 		stats_format = color_format
+
+
+	image = cv2.imread(image_path)
 	
 	contours = detect_objects(image)
 	colors = get_colors(image, contours,

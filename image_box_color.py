@@ -22,9 +22,12 @@ from functions import choose_valid_points
 	default="LAB",
 	show_default=True
 )
-@click.option('--draw-box', '-b', is_flag=True)
-@click.option('--draw-points', '-p', is_flag=True)
-@click.option('--print-stats', '-s', is_flag=True)
+@click.option('--draw-box', '-b', is_flag=True,
+	help="show box around detected object")
+@click.option('--draw-points', '-p', is_flag=True,
+	help="paint cluster points that contribute to color")
+@click.option('--print-stats', '-s', is_flag=True,
+	help="print statistical information: color, points average and standard deviation")
 def main(image_path, x, y, w, h, color_format, draw_box, draw_points, print_stats):
 	# box_color = [36, 255, 12]
 	rescale_factor = 0.2

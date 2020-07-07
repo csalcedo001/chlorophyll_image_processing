@@ -7,6 +7,7 @@ import skimage
 from functions import choose_color
 from functions import choose_valid_points
 from functions import lab_processing
+from functions import recoloring_functions
 from functions.color import Color
 
 def detect_objects(
@@ -127,7 +128,7 @@ def get_colors(
 
 	return image_color_data
 
-def image_recoloring(target_image, target_colors, reference_colors):
+def image_recoloring(target_image, target_colors, reference_colors, recoloring_function = recoloring_functions.rgb_weighted_average):
 	"""
 	Recolors TARGET_IMAGE to approximate TARGET_COLORS as much as
 	possible to REFERENCE_COLORS.
@@ -141,27 +142,6 @@ def image_recoloring(target_image, target_colors, reference_colors):
 	recolored_image -- image whose colors are as close as possible to those of reference_colors
 	"""
 
-	Color.load_cluster()
-
-	rate = 0
-	rate_count = 1
-
-	color_weights_total = np.array([0., 0., 0.])
-
-	for color in ["red", "blue"]:
-		if color in target_colors and color in reference_colors:
-			color_index = Color.labels.index(color)
-			cluster_color = Color(Color.clusters.cluster_centers_[color_index], Color.format).array("RGB")
-
-			color_weights = cluster_color
-
-			color_weights_total += color_weights
-
-			rate += color_weights * reference_colors[color].array("RGB") / target_colors[color].array("RGB")
-			rate_count += 1
-	
-	rate = rate / color_weights_total
-
-	recolored_image = target_image * rate
+	recolored_image = recoloring_function(target_image, target_colors, reference_colors)
 	
 	return recolored_image

@@ -68,7 +68,9 @@ def get_colors(
 	stats_format -- prints object stats in the given format. If None is given, stats are not printed.
 
 	Returns
-	lab_colors -- list of colors associated with objects.
+	image_color_data -- dictionary
+		object_colors -- array of Color objects from the objects detected in the image
+		image_colors -- dictionary of colors (red, blue, etc.) associated with a Color object
 	"""
 
 	print_stats = stats_format is not None
@@ -133,7 +135,12 @@ def get_colors(
 
 	return image_color_data
 
-def image_recoloring(target_image, target_colors, reference_colors, recoloring_function = recoloring_functions.rgb_weighted_average):
+def image_recoloring(
+	target_image,
+	target_colors,
+	reference_colors,
+	recoloring_function = recoloring_functions.l_log_simple_average
+):
 	"""
 	Recolors TARGET_IMAGE to approximate TARGET_COLORS as much as
 	possible to REFERENCE_COLORS.
@@ -142,6 +149,7 @@ def image_recoloring(target_image, target_colors, reference_colors, recoloring_f
 	target_image -- image whose colors will be updated
 	target_colors -- colors that represent the palette of target_image.
 	reference_colors -- colors to which target_colors must approximate.
+	recoloring_function -- recoloring function in use.
 
 	Returns:
 	recolored_image -- image whose colors are as close as possible to those of reference_colors

@@ -28,7 +28,8 @@ from functions import choose_valid_points
 	help="paint cluster points that contribute to color")
 @click.option('--print-stats', '-s', is_flag=True,
 	help="print statistical information: color, points average and standard deviation")
-def main(image_path, x, y, w, h, color_format, draw_box, draw_points, print_stats):
+@click.option('--result-path', '-r', type=click.Path(), default=None)
+def main(image_path, x, y, w, h, color_format, draw_box, draw_points, print_stats, result_path):
 	# box_color = [36, 255, 12]
 	rescale_factor = 0.2
 	
@@ -59,9 +60,14 @@ def main(image_path, x, y, w, h, color_format, draw_box, draw_points, print_stat
 	
 	#image = cv2.resize(image, (width, height))
 
-	image = image_resize(image)
+	
+	if result_path is not None:
+		print(result_path)
+		cv2.imwrite(result_path, image)
 	
 	if draw_box or draw_points:
+		image = image_resize(image)
+
 		cv2.imshow("image", image)
 		cv2.waitKey(0)
 

@@ -71,6 +71,11 @@ def get_colors(
 	lab_colors -- list of colors associated with objects.
 	"""
 
+	print_stats = stats_format is not None
+	
+	if not print_stats:
+		stats_format = "LAB"
+
 	lab_colors = []
 
 	for c in contours:
@@ -97,7 +102,7 @@ def get_colors(
 		if draw_box:
 			cv2.rectangle(image, (x, y), (x + w, y + h), box_color, 2)
 	
-		if draw_points or stats_format:
+		if draw_points or print_stats:
 			cluster_points = []
 	
 			for i in range(len(valid_points)):
@@ -107,7 +112,7 @@ def get_colors(
 					if draw_points:
 						image[valid_points[i][0], valid_points[i][1]] = box_color
 	
-			if stats_format != None:
+			if print_stats:
 				print(object_color.to(stats_format))
 				print("    Average: " + str(np.average(cluster_points,axis=0)))
 				print("    Standard deviation: " + str(np.std(cluster_points,axis=0)))

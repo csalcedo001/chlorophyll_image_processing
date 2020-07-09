@@ -85,6 +85,6 @@ def image_resize(image):
 	else:
 		factor = height_factor
 	
-	resized_image = cv2.resize(image, (round(factor * screen_width), round(factor * screen_height)))
+	resized_image = cv2.resize(image, (round(factor * image_width), round(factor * image_height)))
 
 	return resized_image

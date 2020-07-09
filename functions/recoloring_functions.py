@@ -17,7 +17,7 @@ import cv2
 
 from functions.color import Color
 
-def rgb_weighted_average(target_image, target_colors, reference_colors):
+def rgb_log_weighted_average(target_image, target_colors, reference_colors):
 	"""
 	Uses reference RGB color to approximate color with cluster
 	colors as weights of a weighted average.
@@ -39,27 +39,33 @@ def rgb_weighted_average(target_image, target_colors, reference_colors):
 
 			color_weights_total += color_weights
 
-			rate += color_weights * reference_colors[color].array("RGB") / target_colors[color].array("RGB")
-			rate_count += 1
+			rate += color_weights * np.log(reference_colors[color].array("RGB") / target_colors[color].array("RGB"))
 	
-	rate = rate / color_weights_total
+	rate = np.exp(rate / color_weights_total)
 
 	recolored_image = target_image * rate
+
 	
 	return recolored_image
 
-def lab_l(target_image, target_colors, reference_colors):
+def l_log_simple_average(target_image, target_colors, reference_colors):
+	"""
+	Calculate the average L factor from image colors to use
+	as a multiplier for the image L channel.
+	"""
+
 	number_of_factors = 0
+	factor_total = 0
 	for color in ["red", "blue"]:
 		if color in target_colors and color in reference_colors:
-			factor_total = reference_colors[color].array("LAB")[0] / target_colors[color].array("LAB")[0]
+			factor_total += np.log(reference_colors[color].array("LAB")[0] / target_colors[color].array("LAB")[0])
 
 			number_of_factors += 1
 	
 	if number_of_factors == 0:
 		return target_image
 	
-	factor = factor_total / number_of_factors
+	factor = np.exp(factor_total / number_of_factors)
 
 	lab_image = cv2.cvtColor(target_image, cv2.COLOR_BGR2LAB)
 

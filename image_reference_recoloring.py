@@ -24,7 +24,12 @@ def main(reference_image_path, target_image_path, result_path):
 	target_colors = get_colors(target_image, target_contours)["image_colors"]
 	
 	#recolored_image = image_recoloring(target_image, target_colors, reference_colors, recoloring_function=lab_l)
-	recolored_image = image_recoloring(target_image, target_colors, reference_colors)
+	recolored_image = image_recoloring(
+		target_image,
+		target_colors,
+		reference_colors,
+		recoloring_function=recoloring_functions.l_log_simple_average
+	)
 	
 	cv2.imwrite(result_path, recolored_image)
 

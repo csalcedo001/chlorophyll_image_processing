@@ -9,8 +9,8 @@ import cv2
 import csv
 import json
 import numpy as np
-from sklearn.cluster import KMeans
 from skimage import color
+from sklearn.cluster import KMeans
 
 from functions.main import detect_objects
 from functions import choose_color
@@ -26,17 +26,6 @@ choose_color = choose_color.biggest_colored_cluster
 @click.command()
 @click.argument('directory_path', type=click.Path(exists=True), default="data/input")
 def main(directory_path):
-	# Reference clusters
-	lab_color_data = None
-	
-	with open("data/lab_cluster_colors.json") as input_file:
-		lab_color_data = json.load(input_file)
-	
-	lab_colors = np.array(lab_color_data["colors"])
-	
-	reference_color_labels = lab_color_data["labels"]
-	reference_clusters = KMeans(n_clusters=4, random_state=0).fit(lab_colors)
-	
 	# Data
 	csv_data = []
 	

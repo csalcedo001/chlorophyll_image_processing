@@ -21,7 +21,8 @@ def full_image_contour(image):
 	width -= 1
 	height -= 1
 
-	contour = np.array([[[0, 0]], [[0, height]], [[width, height]], [[width, 0]]])
+	contour = np.array([[[0, 0]], [[0, width]], [[height, width]], [[height, 0]]])
+	#contour = np.array([[[0, 0]], [[0, height]], [[width, height]], [[width, 0]]])
 
 	return contour
 
@@ -88,3 +89,8 @@ def image_resize(image):
 	resized_image = cv2.resize(image, (round(factor * image_width), round(factor * image_height)))
 
 	return resized_image
+
+def find_first_image(directory_path):
+	for path, subdirs, files in os.walk(directory_path):
+		for filename in files:
+			return os.path.join(path, filename)
